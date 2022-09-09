@@ -1,4 +1,4 @@
-package Modelos;
+package tutorial.MisionTIC.AN.seguridad.Models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

@@ -1,7 +1,8 @@
-package Modelos;
+package tutorial.MisionTIC.AN.seguridad.Models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -12,6 +13,8 @@ public class User {
     private String username;
     private String email;
     private String password;
+    @DBRef
+    private Role role;
 
     public User( String username, String email, String password) {
         this.username = username;
@@ -49,5 +52,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
