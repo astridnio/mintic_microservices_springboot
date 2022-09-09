@@ -1,5 +1,7 @@
 package tutorial.MisionTIC.AN.seguridad.Controllers;
 
+import org.springframework.http.ResponseEntity;
+import tutorial.MisionTIC.AN.seguridad.Exception.ResourceNotFoundException;
 import tutorial.MisionTIC.AN.seguridad.Models.Role;
 import tutorial.MisionTIC.AN.seguridad.Models.User;
 import tutorial.MisionTIC.AN.seguridad.Repositories.RepositoryRole;
@@ -46,42 +48,37 @@ public class ControllerUser {
      * Get user by Id
      **/
     @GetMapping("{id}")
-    public User show(@PathVariable String id){
+    public ResponseEntity<User> show(@PathVariable String id){
         User currentUser = this.myRepositoryUser
                 .findById(id)
-                .orElse( null);
-        return currentUser;
+                .orElseThrow(() -> new ResourceNotFoundException("USER NOT FOUND"));
+        return ResponseEntity.ok(currentUser);
     }
     /**
      * Update user by Id
      **/
     @PutMapping("{id}")
-    public User update(@PathVariable String id, @RequestBody User infoUser){
+    public ResponseEntity<User> update(@PathVariable String id, @RequestBody User infoUser){
         User currentUser = this.myRepositoryUser
                 .findById(id)
-                .orElse( null );
-        if (currentUser != null) {
+                .orElseThrow(() -> new ResourceNotFoundException("USER NOT FOUND"));
             currentUser.setUsername(infoUser.getUsername());
             currentUser.setEmail(infoUser.getEmail());
             currentUser.setPassword(convertSHA256(infoUser.getPassword()));
-            return this.myRepositoryUser.save(currentUser);
-        }else {
-            return null;
-        }
+            myRepositoryUser.save(currentUser);
+            return ResponseEntity.ok(currentUser);
     }
 
     /**
      * Delete User by Id
      **/
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id){
+    public ResponseEntity<HttpStatus> delete(@PathVariable String id){
         User currentUser = this.myRepositoryUser
                 .findById(id)
-                .orElse( null );
-        if(currentUser != null){
-            this.myRepositoryUser.delete(currentUser);
-        }
+                .orElseThrow(() -> new ResourceNotFoundException("USER NOT FOUND"));
+        myRepositoryUser.delete(currentUser);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     /**
      * Assigne Role to an User
