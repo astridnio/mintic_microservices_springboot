@@ -83,6 +83,7 @@ public class ControllerUser {
     /**
      * Assigne Role to an User
      **/
+    @PutMapping("{id}/role/{id_role}")
     public User assingRoletoUser(@PathVariable String id, @PathVariable String id_role){
         User currentUser=this.myRepositoryUser.findById(id).orElseThrow(RuntimeException::new);
         Role currentRole = this.myRepositoryRole.findById(id_role).orElseThrow(RuntimeException::new);
